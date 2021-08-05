@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui"
+      xml:lang="en" lang="en">
+<h:head>
+    <title>Plane demo</title>
+</h:head>
+<body>
+<h:form id="form">
+    <ui:include src="appMenu.xhtml"/>
+    <p:growl id="growl" showDetail="false"/>
+    <p:toolbar>
+        <p:toolbarGroup>
+            <p:commandButton id="add" icon="pi pi-plus" process="@this" value="Új hozzáadása"
+                             actionListener="#{planeCRUDMbean.initSave}" update="@([id$=planeForm])"
+                             oncomplete="PF('planeDialog').show()"/>
+            <p:commandButton disabled="#{planeCRUDMbean.selectedEntity.id==null}" id="delete" icon="pi pi-times"
+                             process="@this" value="Törlés" actionListener="#{planeCRUDMbean.remove}" update="@form">
+                <p:confirm header="Törlés" message="Biztos vagy benne?" icon="pi pi-times"/>
+            </p:commandButton>
+            <p:commandButton disabled="#{planeCRUDMbean.selectedEntity.id==null}" id="update" process="@this"
+                             value="Módosítás" icon="pi pi-pencil" update="@([id$=planeForm])"
+                             oncomplete="PF('planeDialog').show()"/>
+        </p:toolbarGroup>
+        <p:toolbarGroup align="right">
+            <p:commandButton id="columntTogglerBtn" icon="pi pi-table"/>
+
+            <p:columnToggler id="columntToggler" trigger="columntTogglerBtn" datasource="table"/>
+
+            <p:commandButton value="XLS" styleClass="p-mr-2 p-mb-2">
+                <p:dataExporter type="xls" target="table" fileName="export"/>
+            </p:commandButton>
+
+            <p:commandButton value="XLXS" styleClass="p-mr-2 p-mb-2">
+                <p:dataExporter type="xlsxstream" target="table" fileName="export"/>
+            </p:commandButton>
+
+            <!-- TODO Utf-8 karakter -->
+            <p:commandButton value="PDF" styleClass="p-mr-2 p-mb-2">
+                <p:dataExporter type="pdf" target="table" fileName="export"/>
+            </p:commandButton>
+        </p:toolbarGroup>
+    </p:toolbar>
+    <p:dataTable id="table" paginator="true" value="#{planeCRUDMbean.list}" var="ship"
+                 selectionMode="single" selection="#{planeCRUDMbean.selectedEntity}" rowKey="#{plane.id}"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                 rowsPerPageTemplate="5,10,{ShowAll|'All'}">
+        <p:ajax event="rowSelect" update="@form"/>
+        <p:column toggleable="false" sortBy="#{ship.id}" filterBy="#{ship.id}" filterMatchMode="contains"
+                  headerText="ID">
+            <h:outputText value="#{ship.id}"/>
+        </p:column>
+        <p:column sortBy="#{ship.manufacturer}" filterBy="#{ship.manufacturer}" headerText="Gyártó száma"
+                  filterMatchMode="contains">
+            <h:outputText value="#{ship.manufacturer}"/>
+        </p:column>
+        <p:column sortBy="#{ship.type}" filterBy="#{ship.type}" headerText="Típus" filterMatchMode="contains">
+            <h:outputText value="#{ship.type}"/>
+        </p:column>
+        <p:column sortBy="#{ship.passengerNumber}" filterBy="#{ship.passengerNumber}" headerText="Ajtók száma"
+                  filterMatchMode="contains">
+            <h:outputText value="#{ship.passengerNumber}"/>
+        </p:column>
+        <p:column sortBy="#{ship.owner.fullName}" filterBy="#{ship.farmer.fullName}" headerText="Tulajdonos neve" filterMatchMode="contains">
+            <h:outputText value="#{ship.owner.fullName}"/>
+        </p:column>
+    </p:dataTable>
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+        <p:commandButton value="Nem" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+        <p:commandButton value="Igen" type="button" styleClass="ui-confirmdialog-yes"/>
+    </p:confirmDialog>
+</h:form>
+
+<p:dialog id="planeDialog" widgetVar="planeDialog" header="Form" modal="true" closable="true">
+    <h:form id="planeForm">
+        <p:panelGrid layout="grid" columns="2" id="formPanel" style="width: 400px">
+            <p:outputLabel value="Gyártó"/>
+            <p:inputText value="#{planeCRUDMbean.selectedEntity.manufacturer}" required="true" requiredMessage="Gyártó kötelező"/>
+
+            <p:outputLabel value="Típus"/>
+            <p:inputText value="#{planeCRUDMbean.selectedEntity.type}" required="true" requiredMessage="Típus kötelező"/>
+
+            <p:outputLabel value="Utasok száma"/>
+            <p:inputNumber maxValue="100" thousandSeparator="" decimalPlaces="0"
+                           value="#{planeCRUDMbean.selectedEntity.passengerNumber}" required="true"
+                           requiredMessage="Ajtók száma kötelező"/>
+            <p:outputLabel value="Owner"/>
+            <p:selectOneMenu value="#{planeCRUDMbean.selectedEntity.owner}" converter="#{ownerConverter}">
+                <f:selectItem itemValue="#{null}" itemLabel="Kérem válasszon"/>
+                <f:selectItems value="#{planeCRUDMbean.ownerList}" var="owner" itemLabel="#{owner.fullName}" itemValue="#{owner}"/>
+            </p:selectOneMenu>
+            <p:commandButton value="Mentés" icon="pi pi-save" actionListener="#{planeCRUDMbean.save()}"
+                             process="formPanel" update=":form"/>
+        </p:panelGrid>
+    </h:form>
+</p:dialog>
+</body>
+</html>
