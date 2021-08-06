@@ -15,11 +15,11 @@ public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreR
     @Inject
     private OwnerService ownerService;
     @Inject
-    private CoreService<T> catService;
+    private CoreService<T> service;
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAll() {
-        return Response.ok(catService.getAll().stream().map(this::createModelFromEntity).collect(Collectors.toList())).build();
+        return Response.ok(service.getAll().stream().map(this::createModelFromEntity).collect(Collectors.toList())).build();
     }
 
     @POST
@@ -29,7 +29,7 @@ public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreR
 
         T entity = initNewEntity();
         populateEntityFromModel(entity, model);
-        catService.add(entity);
+        service.add(entity);
         return Response.ok(createModelFromEntity(entity)).build();
     }
 
@@ -37,12 +37,12 @@ public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreR
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@Valid M model) {
-        T entity = catService.findById(model.getId());
+        T entity = service.findById(model.getId());
         if (entity == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         populateEntityFromModel(entity, model);
-        catService.update(entity);
+        service.update(entity);
         return Response.ok(createModelFromEntity(entity)).build();
     }
 
@@ -50,13 +50,28 @@ public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreR
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") Long id) {
-        T entity = catService.findById(id);
+        T entity = service.findById(id);
         if (entity == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        catService.remove(entity);
+        service.remove(entity);
         return Response.ok().build();
     }
+
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findById(@PathParam("id") Long id) {
+        T entity = service.findById(id);
+        if (entity == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(createModelFromEntity(entity)).build();
+    }
+
+
+
 
     protected void populateEntityFromModel(T entity, M model) {
         if (model.getOwnerId() != null) {
