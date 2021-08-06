@@ -1,0 +1,33 @@
+POST http://localhost:8080/api/owner
+Content-Type: application/json
+
+{
+  "fullName": "Jankó"
+}
+
+###
+
+PUT http://localhost:8080/api/owner
+Content-Type: application/json
+
+{
+  "id": 2,
+  "fullName": "Borza Márton"
+}
+
+###
+GET http://localhost:8080/api/owner
+Accept: application/json
+
+###
+
+DELETE http://localhost:8080/api/owner/1
+Accept: application/json
+
+###
+
+GET http://localhost:8080/api/owner/demo/2
+Accept: application/json
+
+###
+

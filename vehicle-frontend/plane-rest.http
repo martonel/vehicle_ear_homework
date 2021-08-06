@@ -1,0 +1,34 @@
+POST http://localhost:8080/api/plane
+Content-Type: application/json
+
+{
+  "passengerNumber": "42",
+  "manufacturer": "Airbus",
+  "type": "Airbus",
+  "ownerId": 3
+}
+
+###
+
+PUT http://localhost:8080/api/plane
+Content-Type: application/json
+
+{
+  "id": 3,
+  "passengerNumber": "32",
+  "manufacturer": "Boeing",
+  "type": "Boeing",
+  "ownerId": 2
+}
+
+###
+GET http://localhost:8080/api/plane
+Accept: application/json
+
+###
+
+DELETE http://localhost:8080/api/plane/4
+Accept: application/json
+
+###
+

@@ -1,0 +1,40 @@
+POST http://localhost:8080/api/car
+Content-Type: application/json
+
+{
+  "licensePlateNumber": "ABC-123",
+  "doorNumbers": 5,
+  "manufacturer": "mercedes",
+  "type": "mercedes",
+  "ownerId": 3
+}
+
+###
+
+PUT http://localhost:8080/api/car
+Content-Type: application/json
+
+{
+  "id": 4,
+  "licensePlateNumber": 15,
+  "doorNumbers": 5,
+  "manufacturer": "mercedes",
+  "type": "mercedes",
+  "ownerId": 1
+}
+
+###
+GET http://localhost:8080/api/car
+Accept: application/json
+
+###
+
+DELETE http://localhost:8080/api/car/8
+Accept: application/json
+
+###
+
+GET http://localhost:8080/api/car/3
+Accept: application/json
+
+###

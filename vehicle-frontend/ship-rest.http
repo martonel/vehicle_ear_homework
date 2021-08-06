@@ -1,0 +1,34 @@
+POST http://localhost:8080/api/ship
+Content-Type: application/json
+
+{
+  "licensePlateNumber": "ABC-123",
+  "manufacturer": "Maersk",
+  "type": "Maersk",
+  "ownerId": 3
+}
+
+###
+
+PUT http://localhost:8080/api/ship
+Content-Type: application/json
+
+{
+  "id": 2,
+  "licensePlateNumber": "CBA-321",
+  "manufacturer": "Maersk",
+  "type": "Maersk",
+  "ownerId": 2
+}
+
+###
+GET http://localhost:8080/api/ship
+Accept: application/json
+
+###
+
+DELETE http://localhost:8080/api/ship/3
+Accept: application/json
+
+###
+
