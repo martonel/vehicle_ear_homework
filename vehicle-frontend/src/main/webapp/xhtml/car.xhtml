@@ -45,33 +45,33 @@
         </p:toolbarGroup>
     </p:toolbar>
 
-    <p:dataTable id="table" paginator="true" value="#{carCRUDMbean.list}" var="ship"
+    <p:dataTable id="table" paginator="true" value="#{carCRUDMbean.list}" var="car"
                  selectionMode="single" selection="#{carCRUDMbean.selectedEntity}" rowKey="#{car.id}"
                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
                  rowsPerPageTemplate="5,10,{ShowAll|'All'}">
         <p:ajax event="rowSelect" update="@form"/>
-        <p:column toggleable="false" sortBy="#{ship.id}" filterBy="#{ship.id}" filterMatchMode="contains"
+        <p:column toggleable="false" sortBy="#{car.id}" filterBy="#{car.id}" filterMatchMode="contains"
                   headerText="ID">
-            <h:outputText value="#{ship.id}"/>
+            <h:outputText value="#{car.id}"/>
         </p:column>
-        <p:column sortBy="#{ship.manufacturer}" filterBy="#{ship.manufacturer}" headerText="Gyártó száma"
+        <p:column sortBy="#{car.manufacturer}" filterBy="#{car.manufacturer}" headerText="Gyártó száma"
                   filterMatchMode="contains">
-            <h:outputText value="#{ship.manufacturer}"/>
+            <h:outputText value="#{car.manufacturer}"/>
         </p:column>
-        <p:column sortBy="#{ship.type}" filterBy="#{ship.type}" headerText="Típus" filterMatchMode="contains">
-            <h:outputText value="#{ship.type}"/>
+        <p:column sortBy="#{car.type}" filterBy="#{car.type}" headerText="Típus" filterMatchMode="contains">
+            <h:outputText value="#{car.type}"/>
         </p:column>
-        <p:column sortBy="#{ship.doorNumbers}" filterBy="#{ship.doorNumbers}" headerText="Ajtók száma"
+        <p:column sortBy="#{car.doorNumbers}" filterBy="#{car.doorNumbers}" headerText="Ajtók száma"
                   filterMatchMode="contains">
-            <h:outputText value="#{ship.doorNumbers}"/>
+            <h:outputText value="#{car.doorNumbers}"/>
         </p:column>
-        <p:column sortBy="#{ship.licensePlateNumber}" filterBy="#{ship.licensePlateNumber}" headerText="Rendszám"
+        <p:column sortBy="#{car.licensePlateNumber}" filterBy="#{car.licensePlateNumber}" headerText="Rendszám"
                   filterMatchMode="contains">
-            <h:outputText value="#{ship.licensePlateNumber}"/>
+            <h:outputText value="#{car.licensePlateNumber}"/>
         </p:column>
-        <p:column sortBy="#{ship.owner.fullName}" filterBy="#{ship.farmer.fullName}" headerText="Tulajdonos neve" filterMatchMode="contains">
-            <h:outputText value="#{ship.owner.fullName}"/>
+        <p:column sortBy="#{car.owner.fullName}" filterBy="#{car.farmer.fullName}" headerText="Tulajdonos neve" filterMatchMode="contains">
+            <h:outputText value="#{car.owner.fullName}"/>
         </p:column>
     </p:dataTable>
     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
@@ -94,7 +94,7 @@
                            value="#{carCRUDMbean.selectedEntity.doorNumbers}" required="true"
                            requiredMessage="Ajtók száma kötelező"/>
             <p:outputLabel value="Rendszám"/>
-            <p:inputNumber value="#{carCRUDMbean.selectedEntity.licensePlateNumber}" required="true"
+            <p:inputText value="#{carCRUDMbean.selectedEntity.licensePlateNumber}" required="true"
                            requiredMessage="Rendszám kötelező"/>
             <p:outputLabel value="Owner"/>
             <p:selectOneMenu value="#{carCRUDMbean.selectedEntity.owner}" converter="#{ownerConverter}">

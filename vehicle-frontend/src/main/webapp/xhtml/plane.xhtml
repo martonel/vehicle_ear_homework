@@ -44,29 +44,29 @@
             </p:commandButton>
         </p:toolbarGroup>
     </p:toolbar>
-    <p:dataTable id="table" paginator="true" value="#{planeCRUDMbean.list}" var="ship"
+    <p:dataTable id="table" paginator="true" value="#{planeCRUDMbean.list}" var="plane"
                  selectionMode="single" selection="#{planeCRUDMbean.selectedEntity}" rowKey="#{plane.id}"
                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
                  rowsPerPageTemplate="5,10,{ShowAll|'All'}">
         <p:ajax event="rowSelect" update="@form"/>
-        <p:column toggleable="false" sortBy="#{ship.id}" filterBy="#{ship.id}" filterMatchMode="contains"
+        <p:column toggleable="false" sortBy="#{plane.id}" filterBy="#{plane.id}" filterMatchMode="contains"
                   headerText="ID">
-            <h:outputText value="#{ship.id}"/>
+            <h:outputText value="#{plane.id}"/>
         </p:column>
-        <p:column sortBy="#{ship.manufacturer}" filterBy="#{ship.manufacturer}" headerText="Gyártó száma"
+        <p:column sortBy="#{plane.manufacturer}" filterBy="#{plane.manufacturer}" headerText="Gyártó száma"
                   filterMatchMode="contains">
-            <h:outputText value="#{ship.manufacturer}"/>
+            <h:outputText value="#{plane.manufacturer}"/>
         </p:column>
-        <p:column sortBy="#{ship.type}" filterBy="#{ship.type}" headerText="Típus" filterMatchMode="contains">
-            <h:outputText value="#{ship.type}"/>
+        <p:column sortBy="#{plane.type}" filterBy="#{plane.type}" headerText="Típus" filterMatchMode="contains">
+            <h:outputText value="#{plane.type}"/>
         </p:column>
-        <p:column sortBy="#{ship.passengerNumber}" filterBy="#{ship.passengerNumber}" headerText="Ajtók száma"
+        <p:column sortBy="#{plane.passengerNumber}" filterBy="#{plane.passengerNumber}" headerText="Ajtók száma"
                   filterMatchMode="contains">
-            <h:outputText value="#{ship.passengerNumber}"/>
+            <h:outputText value="#{plane.passengerNumber}"/>
         </p:column>
-        <p:column sortBy="#{ship.owner.fullName}" filterBy="#{ship.farmer.fullName}" headerText="Tulajdonos neve" filterMatchMode="contains">
-            <h:outputText value="#{ship.owner.fullName}"/>
+        <p:column sortBy="#{plane.owner.fullName}" filterBy="#{plane.farmer.fullName}" headerText="Tulajdonos neve" filterMatchMode="contains">
+            <h:outputText value="#{plane.owner.fullName}"/>
         </p:column>
     </p:dataTable>
     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
