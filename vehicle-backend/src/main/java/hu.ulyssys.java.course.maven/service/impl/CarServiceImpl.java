@@ -7,6 +7,6 @@ import hu.ulyssys.java.course.maven.service.CarService;
 import javax.ejb.Stateless;
 
 @Stateless
-public class CarServiceImpl  extends AbstractServiceImpl<Car> implements CarService  {
+public class CarServiceImpl extends AbstractOwnerServiceImpl<Car> implements CarService  {
 
 }

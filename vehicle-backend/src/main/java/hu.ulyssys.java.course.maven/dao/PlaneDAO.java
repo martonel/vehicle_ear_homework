@@ -6,6 +6,6 @@ import hu.ulyssys.java.course.maven.entity.Plane;
 
 import java.util.List;
 
-public interface PlaneDAO extends CoreDAO<Plane>{
+public interface PlaneDAO extends OwnerAwareDAO<Plane>{
 
 }

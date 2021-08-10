@@ -14,6 +14,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Stateless
-public class PlaneServiceImpl extends AbstractServiceImpl<Plane> implements PlaneService {
+public class PlaneServiceImpl extends AbstractOwnerServiceImpl<Plane> implements PlaneService {
 
 }

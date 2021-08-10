@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @ApplicationScoped
-public class CarDAOImpl  extends CoreDAOImpl<Car> implements CarDAO {
+public class CarDAOImpl  extends AbstractOwnerAwareDAOImpl<Car> implements CarDAO {
 
     @Override
     protected Class<Car> getManagedClass() {

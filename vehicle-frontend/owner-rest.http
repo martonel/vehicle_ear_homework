@@ -21,13 +21,12 @@ Accept: application/json
 
 ###
 
-DELETE http://localhost:8080/api/owner/1
+DELETE http://localhost:8080/api/owner/4
 Accept: application/json
 
 ###
 
-GET http://localhost:8080/api/owner/demo/2
+GET http://localhost:8080/api/owner/data/1
 Accept: application/json
 
 ###
-

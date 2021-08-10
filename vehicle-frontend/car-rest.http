@@ -34,7 +34,14 @@ Accept: application/json
 
 ###
 
-GET http://localhost:8080/api/car/3
+
+###
+GET http://localhost:8080/api/car/owner/1
+Accept: application/json
+
+###
+
+GET http://localhost:8080/api/car/owner/10
 Accept: application/json
 
 ###

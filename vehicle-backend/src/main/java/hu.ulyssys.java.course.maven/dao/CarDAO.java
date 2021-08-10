@@ -5,5 +5,5 @@ import hu.ulyssys.java.course.maven.entity.Car;
 
 import java.util.List;
 
-public interface CarDAO extends CoreDAO<Car>{
+public interface CarDAO extends OwnerAwareDAO<Car>{
 }

@@ -13,7 +13,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @ApplicationScoped
-public class ShipDAOImpl  extends CoreDAOImpl<Ship> implements ShipDAO {
+public class ShipDAOImpl  extends AbstractOwnerAwareDAOImpl<Ship> implements ShipDAO {
 
 
     @Override

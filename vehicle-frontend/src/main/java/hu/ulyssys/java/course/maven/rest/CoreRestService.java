@@ -1,7 +1,9 @@
 package hu.ulyssys.java.course.maven.rest;
+
 import hu.ulyssys.java.course.maven.entity.AbstractVehicle;
 import hu.ulyssys.java.course.maven.rest.model.CoreRestModel;
 import hu.ulyssys.java.course.maven.service.CoreService;
+import hu.ulyssys.java.course.maven.service.OwnerAwareService;
 import hu.ulyssys.java.course.maven.service.OwnerService;
 
 import javax.inject.Inject;
@@ -9,17 +11,44 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.util.stream.Collectors;
+
 public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreRestModel> {
 
     @Inject
     private OwnerService ownerService;
+
     @Inject
-    private CoreService<T> service;
+    private CoreService<T> coreService;
+
+    @Inject
+    private OwnerAwareService<T> ownerAwareService;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response findByID(@PathParam("id") Long id) {
+        T entity = coreService.findById(id);
+        if (entity == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(createModelFromEntity(entity)).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/owner/{id}")
+    public Response findByFarmerId(@PathParam("id") Long id) {
+        return Response.ok(ownerAwareService.findByOwnerId(id).stream().map(this::createModelFromEntity).collect(Collectors.toList())).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/all")
     public Response findAll() {
-        return Response.ok(service.getAll().stream().map(this::createModelFromEntity).collect(Collectors.toList())).build();
+        return Response.ok(coreService.getAll().stream().map(this::createModelFromEntity).collect(Collectors.toList())).build();
     }
 
     @POST
@@ -29,7 +58,8 @@ public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreR
 
         T entity = initNewEntity();
         populateEntityFromModel(entity, model);
-        service.add(entity);
+
+        coreService.add(entity);
         return Response.ok(createModelFromEntity(entity)).build();
     }
 
@@ -37,41 +67,27 @@ public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreR
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(@Valid M model) {
-        T entity = service.findById(model.getId());
+        T entity = coreService.findById(model.getId());
         if (entity == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         populateEntityFromModel(entity, model);
-        service.update(entity);
+        coreService.update(entity);
         return Response.ok(createModelFromEntity(entity)).build();
+
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") Long id) {
-        T entity = service.findById(id);
+        T entity = coreService.findById(id);
         if (entity == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        service.remove(entity);
+        coreService.remove(entity);
         return Response.ok().build();
     }
-
-
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response findById(@PathParam("id") Long id) {
-        T entity = service.findById(id);
-        if (entity == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(createModelFromEntity(entity)).build();
-    }
-
-
-
 
     protected void populateEntityFromModel(T entity, M model) {
         if (model.getOwnerId() != null) {
@@ -92,7 +108,26 @@ public abstract class CoreRestService<T extends AbstractVehicle, M extends CoreR
         return model;
     }
 
-    protected abstract T initNewEntity();
+    //Generikus típus megszerzés, és reflection alapú objektum inicializálása
+    protected T initNewEntity() {
+
+        try {
+            // A konténer, beinjectáláskor, egy Proxy obejktumot hoz létre, ezért kérszer kell leolvasnunk ebben az esetben a ősosztály, és annak típusát
+            // Ha model paraméterre szükség, akkor 1 indexű elem kellene az array-ből
+            Class<T> type = (Class<T>) (((ParameterizedType) ((Class) getClass().getGenericSuperclass()).getGenericSuperclass())).getActualTypeArguments()[1];
+            return type.getConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     protected abstract M initNewModel();
 
 }

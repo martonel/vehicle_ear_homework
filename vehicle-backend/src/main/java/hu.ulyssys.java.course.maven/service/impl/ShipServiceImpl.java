@@ -13,6 +13,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Stateless
-public class ShipServiceImpl  extends AbstractServiceImpl<Ship> implements ShipService {
+public class ShipServiceImpl extends AbstractOwnerServiceImpl<Ship> implements ShipService {
 
 }

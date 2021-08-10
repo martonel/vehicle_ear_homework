@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @ApplicationScoped
-public class PlaneDAOImpl  extends CoreDAOImpl<Plane> implements PlaneDAO {
+public class PlaneDAOImpl  extends AbstractOwnerAwareDAOImpl<Plane> implements PlaneDAO {
 
     @Override
     protected Class<Plane> getManagedClass() {

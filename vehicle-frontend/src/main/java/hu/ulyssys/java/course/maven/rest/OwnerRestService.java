@@ -1,18 +1,20 @@
 package hu.ulyssys.java.course.maven.rest;
 
-import com.itextpdf.text.Paragraph;
 import hu.ulyssys.java.course.maven.entity.*;
+import hu.ulyssys.java.course.maven.rest.model.OwnerDataModel;
 import hu.ulyssys.java.course.maven.rest.model.OwnerModel;
 import hu.ulyssys.java.course.maven.service.CarService;
 import hu.ulyssys.java.course.maven.service.OwnerService;
 import hu.ulyssys.java.course.maven.service.PlaneService;
 import hu.ulyssys.java.course.maven.service.ShipService;
+import hu.ulyssys.java.course.maven.util.CarModelMapperBean;
+import hu.ulyssys.java.course.maven.util.PlaneModelMapperBean;
+import hu.ulyssys.java.course.maven.util.ShipModelMapperBean;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,43 @@ public class OwnerRestService {
 
     @Inject
     private ShipService shipService;
+
+    @Inject
+    private CarModelMapperBean carModelMapperBean;
+    @Inject
+    private PlaneModelMapperBean planeModelMapperBean;
+    @Inject
+    private ShipModelMapperBean shipModelMapperBean;
+
+    @GET
+    @Path("/data/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findDataById(@PathParam("id") Long id) {
+        Owner owner = service.findById(id);
+        if (owner == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+
+        }
+        List<Car> carList = carService.findByOwnerId(id);
+        List<Plane> planeList = planeService.findByOwnerId(id);
+
+        List<Ship> shipList = shipService.findByOwnerId(id);
+
+        OwnerDataModel dataModel = new OwnerDataModel();
+        dataModel.setId(owner.getId());
+        dataModel.setFullName(owner.getFullName());
+        dataModel.setCars(carModelMapperBean.createModelsFromList(carList));
+        dataModel.setPlanes(planeModelMapperBean.createModelsFromList(planeList));
+        dataModel.setShips(shipModelMapperBean.createModelsFromList(shipList));
+
+        return Response.ok(dataModel).build();
+    }
+
+
+
+
+
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,40 +116,6 @@ public class OwnerRestService {
     }
 
 
-
-    @GET
-    @Path("/demo/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response findByOwnerID(@PathParam("id") Long id) {
-        //select * form vehicle where ownerid =1
-        List<AbstractVehicle> list = new ArrayList<>();
-        int i = 0;
-        for (Car car : carService.getAll()) {
-            if(car.getOwner()!=null){
-                if(car.getOwner().getId().equals(id)) {
-                    list.add(car);
-                }
-            }
-        }
-        for (Plane plane : planeService.getAll()) {
-            if(plane.getOwner()!=null){
-                if(plane.getOwner().getId().equals(id)){
-                    list.add(plane);
-                }
-            }
-        }
-        for (Ship ship : shipService.getAll()) {
-            if(ship.getOwner()!=null){
-                if(ship.getOwner().getId().equals(id)){
-                    list.add(ship);
-                }
-            }
-        }
-        if(list.size()==0){
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(list).build();
-    }
 
     private OwnerModel createModelFromEntity(Owner owner) {
         OwnerModel model = new OwnerModel();
